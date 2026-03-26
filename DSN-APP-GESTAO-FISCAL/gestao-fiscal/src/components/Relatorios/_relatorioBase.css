@@ -1,0 +1,62 @@
+.relatorio { display: flex; flex-direction: column; gap: 12px; }
+
+.relatorio-filtros {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.relatorio-filtros label { font-size: 12px; color: var(--muted); }
+
+.relatorio-filtros select,
+.relatorio-filtros input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; }
+
+.actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+
+.primary {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--primary);
+  color: var(--primary-text);
+  cursor: pointer;
+}
+
+.secondary {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.tableWrap { overflow: auto; }
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { padding: 10px; border-bottom: 1px solid var(--border); text-align:left; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.rel-card h3 { margin: 0 0 10px 0; }
+.rel-card ul { margin: 0; padding-left: 16px; }
+.rel-card li { margin: 6px 0; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .actions { justify-content: stretch; }
+  .actions button { width: 100%; }
+}

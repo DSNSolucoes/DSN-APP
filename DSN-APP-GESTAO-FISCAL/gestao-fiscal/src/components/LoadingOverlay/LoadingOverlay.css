@@ -1,0 +1,55 @@
+.lo-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(120, 120, 120, 0.35); /* cinza esmaecido */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+}
+
+/* Spinner “cheio de traços” (12 barras) azul */
+.lo-spinner {
+  width: 72px;
+  height: 72px;
+  position: relative;
+}
+
+.lo-spinner::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 90, 255, 0.10),
+    rgba(0, 90, 255, 0.20),
+    rgba(0, 90, 255, 0.35),
+    rgba(0, 90, 255, 0.55),
+    rgba(0, 90, 255, 0.75),
+    rgba(0, 90, 255, 1.00)
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent 62%, #000 63%);
+          mask: radial-gradient(farthest-side, transparent 62%, #000 63%);
+  animation: lo-spin 0.9s linear infinite;
+}
+
+/* cria efeito “traços” */
+.lo-spinner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    rgba(255,255,255,0) 0 16deg,
+    rgba(255,255,255,0.55) 16deg 18deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent 58%, #000 59%);
+          mask: radial-gradient(farthest-side, transparent 58%, #000 59%);
+  opacity: 0.75;
+}
+
+@keyframes lo-spin {
+  to { transform: rotate(360deg); }
+}

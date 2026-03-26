@@ -1,0 +1,56 @@
+.relatorios-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.relatorios-top {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.relatorios-select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.relatorios-select label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.relatorios-select select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  width: 320px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.relatorios-hint {
+  padding: 18px;
+}
+
+
+@media (max-width: 480px) {
+  .relatorios-top { align-items: stretch; }
+  .relatorios-select { width: 100%; }
+  .relatorios-select select { width: 100%; }
+  .relatorios-top .btn { width: 100%; }
+}

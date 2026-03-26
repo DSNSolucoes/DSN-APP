@@ -1,0 +1,144 @@
+/* src/components/FechamentoCaixa/CaixaCard/CaixaCard.css */
+
+.caixa-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.caixa-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.caixa-card__kicker {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.caixa-card__title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.caixa-card__badge {
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.caixa-card__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.caixa-card__rowwrap {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.caixa-row {
+  display: grid;
+  grid-template-columns: 34px 1fr auto 40px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+:root[data-theme="dark"] .caixa-row {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.caixa-row__expand {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.caixa-row__label {
+  font-weight: 600;
+}
+
+.caixa-row__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.caixa-row__currency {
+  margin-right: 4px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.caixa-row__add {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  background: var(--primary);
+  color: var(--primary-text);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.caixa-row__add:hover {
+  filter: brightness(0.95);
+}
+
+.caixa-row__details {
+  padding: 10px;
+  background: transparent;
+}
+
+/* Mobile: reorganiza a linha (evita cortar valor/label) */
+@media (max-width: 768px) {
+  .caixa-row {
+    grid-template-columns: 34px 1fr 40px;
+    grid-template-rows: auto auto;
+    align-items: start;
+  }
+
+  .caixa-row__label {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .caixa-row__value {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .caixa-row__add {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+}
+
+/* tooltips usam title; isso garante que o texto truncado mostre reticências */
+.cell-ellipsis {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}

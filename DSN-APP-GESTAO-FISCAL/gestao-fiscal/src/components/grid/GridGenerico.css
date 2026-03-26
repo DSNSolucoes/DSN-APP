@@ -1,0 +1,157 @@
+/* ===== Tema (variáveis) ===== */
+:root {
+  --grid-bg: #ffffff;
+  --grid-border: #e5e7eb;
+  --grid-header-bg: #f3f4f6;
+  --grid-header-hover: #eef2ff;
+  --grid-header-active: #e0e7ff;
+
+  --grid-text: #111827;
+  --grid-text-muted: #6b7280;
+
+  --grid-zebra-even: #ffffff;
+  --grid-zebra-odd: #fafafa;
+
+  --grid-icon: #2563eb; /* azul */
+}
+
+/* Se seu app já usa outro seletor de dark, me diga qual é e eu ajusto.
+   Exemplos comuns: body.dark, html.dark, [data-theme="dark"], .dark  */
+[data-theme="dark"] {
+  --grid-bg: #0b1220;
+  --grid-border: #243042;
+  --grid-header-bg: #121b2d;
+  --grid-header-hover: #16213a;
+  --grid-header-active: #1a2a4a;
+
+  --grid-text: #e5e7eb;
+  --grid-text-muted: #9ca3af;
+
+  --grid-zebra-even: #0b1220;
+  --grid-zebra-odd: #0f172a;
+
+  --grid-icon: #60a5fa; /* azul mais claro */
+}
+
+/* ===== Estrutura ===== */
+.gridg-wrap {
+  width: 100%;
+}
+
+.gridg-table {
+  width: 100%;
+  border: 1px solid var(--grid-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--grid-bg);
+  color: var(--grid-text);
+}
+
+.gridg-row {
+  display: flex;
+  width: 100%;
+}
+
+.gridg-header {
+  background: var(--grid-header-bg);
+  border-bottom: 1px solid var(--grid-border);
+}
+
+.gridg-cell {
+  padding: 10px 12px;
+  border-right: 1px solid var(--grid-border);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Colunas que precisam quebrar linha (ex.: funcionário e data) */
+.gridg-cell.wrap {
+  white-space: normal;
+  text-overflow: clip;
+  overflow: visible;
+}
+
+.gridg-row .gridg-cell:last-child {
+  border-right: none;
+}
+
+.gridg-headcell.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.gridg-headcell.sortable:hover {
+  background: var(--grid-header-hover);
+}
+
+.gridg-headtext {
+  font-weight: 400; /* padrão */
+  color: var(--grid-text);
+}
+
+.gridg-headtext.active-col {
+  font-weight: 700; /* coluna ativa */
+}
+
+.gridg-sorticon {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--grid-icon);
+  opacity: 0.95;
+}
+
+.zebra-even {
+  background: var(--grid-zebra-even);
+}
+
+.zebra-odd {
+  background: var(--grid-zebra-odd);
+}
+
+.gridg-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--grid-text-muted);
+}
+
+/* ===== Mobile: transforma "tabela" em lista (header some e cada célula mostra label) ===== */
+@media (max-width: 768px) {
+  .gridg-header {
+    display: none;
+  }
+
+  .gridg-row {
+    flex-direction: column;
+    border-bottom: 1px solid var(--grid-border);
+  }
+
+  .gridg-row:last-child {
+    border-bottom: none;
+  }
+
+  .gridg-cell {
+    width: 100% !important;
+    border-right: none;
+    border-bottom: 1px solid var(--grid-border);
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    /* No mobile vira "blocos" alinhados à esquerda (evita valores cortados à direita) */
+    display: block;
+    text-align: left;
+  }
+
+  .gridg-row .gridg-cell:last-child {
+    border-bottom: none;
+  }
+
+  .gridg-cell::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: var(--grid-text-muted);
+    display: block;
+    margin-bottom: 4px;
+    max-width: none;
+  }
+}

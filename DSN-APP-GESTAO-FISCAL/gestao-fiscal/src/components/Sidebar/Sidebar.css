@@ -1,0 +1,180 @@
+/* ==================== SIDEBAR (DESKTOP / BASE) ==================== */
+
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--card);   /* era #f5f7fb */
+  color: var(--text);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 1px 0 4px rgba(15, 23, 42, 0.08);
+
+  /* importante no mobile pra width incluir padding */
+  box-sizing: border-box;
+}
+
+/* topo da sidebar: título + botões */
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* título */
+.sidebar-header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.sidebar-header span {
+  font-size: 12px;
+  color: var(--muted); /* era #666 */
+}
+
+.sidebar-nav {
+  margin-top: 24px;
+  flex: 1;
+}
+
+.sidebar-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-align: left;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.sidebar-item--active {
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+.sidebar-footer {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ==================== AÇÕES DO TOPO (Tema + Menu) ==================== */
+
+.sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* botão do tema */
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text);
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==================== BOTÃO HAMBÚRGUER (☰ / ✕) ==================== */
+
+/* desktop: escondido */
+.sidebar-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+
+  /* ícone */
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--text);
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* remove qualquer estilo antigo das barras (caso ainda existam spans no JSX) */
+.sidebar-toggle span {
+  display: none;
+}
+
+/* ==================== OVERLAY ==================== */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 999; /* abaixo do sidebar (1000) */
+}
+
+/* ==================== MOBILE ==================== */
+
+@media (max-width: 768px) {
+  /* sidebar vira "barra" mínima */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: 56px; /* menor possível */
+    padding: 10px 6px;
+    overflow: hidden;
+    z-index: 1000;
+    transition: width 200ms ease;
+  }
+
+  /* some textos e itens quando fechado */
+  .sidebar-header,
+  .sidebar-nav,
+  .sidebar-footer {
+    display: none;
+  }
+
+  /* hambúrguer aparece */
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* quando abrir, vira drawer maior */
+  .sidebar.sidebar--open-mobile {
+    width: 260px;
+    overflow: auto;
+  }
+
+  /* quando abrir, mostra os conteúdos */
+  .sidebar.sidebar--open-mobile .sidebar-header,
+  .sidebar.sidebar--open-mobile .sidebar-nav,
+  .sidebar.sidebar--open-mobile .sidebar-footer {
+    display: block;
+  }
+
+  .sidebar-top {
+    gap: 8px;
+  }
+
+  /* quando o menu está fechado e a sidebar é estreita,
+     empilha os botões (tema + menu) pra caber bonito */
+  .sidebar:not(.sidebar--open-mobile) .sidebar-actions {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+}

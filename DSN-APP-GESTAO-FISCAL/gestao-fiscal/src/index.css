@@ -1,0 +1,21 @@
+/* Global base styles (override Vite template defaults) */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: block;
+  min-width: 0;
+  min-height: 100%;
+}
+
+/* Make form controls inherit font */
+button, input, select, textarea {
+  font: inherit;
+}
+
+* {
+  box-sizing: border-box;
+}

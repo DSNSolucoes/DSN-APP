@@ -1,0 +1,171 @@
+/* ===== Tema (variáveis) ===== */
+:root {
+  --pag-bg: #ffffff;
+  --pag-border: #e5e7eb;
+  --pag-text: #111827;
+  --pag-muted: #6b7280;
+
+  --pag-btn-bg: #ffffff;
+  --pag-btn-hover: #f3f4f6;
+  --pag-btn-active-bg: #2563eb;
+  --pag-btn-active-text: #ffffff;
+
+  --pag-dots: #9ca3af;
+
+  --pag-select-bg: #ffffff;
+  --pag-select-border: #d1d5db;
+
+  --pag-shadow: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] {
+  --pag-bg: #0b1220;
+  --pag-border: #243042;
+  --pag-text: #e5e7eb;
+  --pag-muted: #9ca3af;
+
+  --pag-btn-bg: #0f172a;
+  --pag-btn-hover: #16213a;
+  --pag-btn-active-bg: #3b82f6;
+  --pag-btn-active-text: #0b1220;
+
+  --pag-dots: #94a3b8;
+
+  --pag-select-bg: #0f172a;
+  --pag-select-border: #334155;
+
+  --pag-shadow: rgba(0, 0, 0, 0.35);
+}
+
+/* ===== Layout ===== */
+.paginacao {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--pag-border);
+  border-radius: 10px;
+  background: var(--pag-bg);
+  color: var(--pag-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 2px 10px var(--pag-shadow);
+}
+
+.paginacao.is-disabled {
+  opacity: 0.85;
+}
+
+.paginacao__left,
+.paginacao__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.paginacao__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--pag-muted);
+}
+
+.paginacao__meta {
+  font-size: 13px;
+  color: var(--pag-muted);
+  white-space: nowrap;
+}
+
+.paginacao__meta--right {
+  margin-left: 4px;
+}
+
+.paginacao__select {
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--pag-select-border);
+  background: var(--pag-select-bg);
+  color: var(--pag-text);
+  padding: 0 12px;
+  outline: none;
+}
+
+/* ===== Botões ===== */
+.paginacao__pages {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.paginacao__btn,
+.paginacao__page {
+  height: 34px;
+  min-width: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--pag-border);
+  background: var(--pag-btn-bg);
+  color: var(--pag-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 120ms ease, transform 120ms ease;
+}
+
+.paginacao__btn--icon {
+  padding: 0;
+  width: 34px;
+}
+
+.paginacao__btn:hover:not(:disabled),
+.paginacao__page:hover:not(:disabled) {
+  background: var(--pag-btn-hover);
+}
+
+.paginacao__btn:active:not(:disabled),
+.paginacao__page:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.paginacao__btn:disabled,
+.paginacao__page:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.paginacao__page.is-active {
+  background: var(--pag-btn-active-bg);
+  border-color: var(--pag-btn-active-bg);
+  color: var(--pag-btn-active-text);
+  font-weight: 700;
+}
+
+/* ===== Reticências ===== */
+.paginacao__dots {
+  color: var(--pag-dots);
+  padding: 0 2px;
+  user-select: none;
+}
+
+.paginacao__single {
+  font-size: 13px;
+  color: var(--pag-muted);
+  padding: 0 6px;
+}
+
+/* Responsivo: quebra bonito */
+@media (max-width: 900px) {
+  .paginacao {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .paginacao__right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

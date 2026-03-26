@@ -1,0 +1,228 @@
+/* ==================== TEMA (CLARO / ESCURO) ==================== */
+
+/* Tema padrão (claro) */
+:root {
+  --bg: #f3f4f7;
+  --text: #111827;
+  --card: #ffffff;
+  --muted: #666;
+  --border: rgba(15, 23, 42, 0.12);
+  --shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+
+  --primary: #2154ff;
+  --primary-text: #ffffff;
+
+  --code-bg: #111827;
+  --code-text: #e5e7eb;
+
+  --empty-bg: #fff7e6;
+}
+
+/* Tema escuro */
+:root[data-theme="dark"] {
+  --bg: #0b1220;
+  --text: #e5e7eb;
+  --card: #0f172a;
+  --muted: #94a3b8;
+  --border: rgba(148, 163, 184, 0.20);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+
+  --primary: #3b82f6;
+  --primary-text: #0b1220;
+
+  --code-bg: #0a1020;
+  --code-text: #e5e7eb;
+
+  --empty-bg: rgba(255, 247, 230, 0.08);
+}
+
+/* aplica no body */
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ==================== LAYOUT PRINCIPAL ==================== */
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+}
+
+.app-main {
+  flex: 1;
+  padding: 24px;
+}
+
+/* ==================== CONTEÚDO ==================== */
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 16px;
+}
+
+/* Componentes gerais */
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.value-big {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.primary-button {
+  margin-top: 16px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--primary);
+  color: var(--primary-text);
+  cursor: pointer;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.erro {
+  color: #d11;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+}
+
+.empty-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--empty-bg);
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+/* ==================== FISCAL – CARDS ==================== */
+
+.fiscal-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.fiscal-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.fiscal-resume-total {
+  margin-top: 24px;
+}
+
+/* Card de terminal melhorado */
+.terminal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+}
+
+/* Cabeçalho: título + status */
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.terminal-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+}
+
+:root[data-theme="dark"] .terminal-label {
+  color: var(--muted);
+}
+
+.terminal-title {
+  margin: 2px 0 0;
+  font-size: 18px;
+}
+
+/* Status badge */
+.terminal-flags {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.status-badge {
+  border: none;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: default;
+  font-weight: 500;
+}
+
+/* ==================== JSON PREVIEW (outras abas) ==================== */
+
+.json-preview {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+/* ==================== RESPONSIVO / MOBILE ==================== */
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .app-main {
+    padding: 16px;
+
+    /* melhor que padding-left quando a sidebar é fixed */
+    margin-left: 56px;
+  }
+
+  /* grid dos cards fica com menos espaço no mobile */
+  .fiscal-list {
+    grid-template-columns: 1fr;
+  }
+
+  .terminal-metrics {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 480px) {
+  .app-main { padding: 12px; }
+  .page { max-width: 100%; }
+}

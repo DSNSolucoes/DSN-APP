@@ -1,0 +1,16 @@
+.empresa-selecao { display:flex; flex-direction:column; gap:6px; }
+.empresa-selecao__label { font-size:12px; color: var(--muted); }
+.empresa-selecao__wrapper { position:relative; }
+.empresa-selecao__select {
+  width:100%;
+  padding:10px 36px 10px 10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  appearance:none;
+}
+.empresa-selecao__arrow {
+  position:absolute; right:12px; top:50%; transform: translateY(-50%);
+  pointer-events:none; color: var(--muted);
+}

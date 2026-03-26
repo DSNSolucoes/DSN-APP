@@ -1,0 +1,22 @@
+/* src/components/FechamentoCaixa/FechamentoCaixaGrid/FechamentoCaixaGrid.css */
+
+.fechamento-grid {
+  display: grid;
+  /* Cards maiores para evitar cortes nas colunas */
+  grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+  gap: 16px;
+}
+
+/* Tablet / telas menores */
+@media (max-width: 1100px) {
+  .fechamento-grid {
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  }
+}
+
+/* Mobile: 1 coluna */
+@media (max-width: 768px) {
+  .fechamento-grid {
+    grid-template-columns: 1fr;
+  }
+}

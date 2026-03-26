@@ -1,0 +1,69 @@
+/* src/components/FechamentoCaixa/SomatorioCard/SomatorioCard.css */
+
+.somatorio-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.somatorio-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.somatorio-card__kicker {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.somatorio-card__title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.somatorio-card__total {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.somatorio-card__currency {
+  margin-right: 4px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.somatorio-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.somatorio-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.somatorio-row__label {
+  font-weight: 600;
+}
+
+.somatorio-row__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.somatorio-row__currency {
+  margin-right: 4px;
+  color: var(--muted);
+  font-weight: 500;
+}

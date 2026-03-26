@@ -1,0 +1,108 @@
+/* src/components/FechamentoCaixa/FechamentoCaixaPrint/FechamentoCaixaPrint.css */
+
+.fcprint {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+
+.fcprint__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #111;
+  padding-bottom: 8px;
+}
+
+.fcprint__title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.fcprint__subtitle {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.fcprint__section {
+  margin-top: 14px;
+  page-break-inside: avoid;
+}
+
+.fcprint__sectionTitle {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.fcprint__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.fcprint__table th,
+.fcprint__table td {
+  border: 1px solid #222;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.fcprint__table th {
+  background: #f2f2f2;
+  font-weight: 700;
+}
+
+.fcprint__num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.fcprint__muted {
+  color: #555;
+}
+
+.fcprint__detailWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fcprint__detailBlock {
+  page-break-inside: avoid;
+}
+
+.fcprint__detailHead {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.fcprint__hint {
+  font-size: 11px;
+  color: #555;
+  margin-top: 6px;
+}
+
+.fcprint__sheetTitle {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.fcprint__sheet th,
+.fcprint__sheet td {
+  padding: 6px 6px;
+}
+
+.fcprint__strong {
+  font-weight: 700;
+}
+
+/* primeira coluna (Tipo) fica mais fácil de ler em páginas largas */
+.fcprint__sticky {
+  font-weight: 700;
+}
