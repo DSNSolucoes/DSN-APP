@@ -1,4 +1,4 @@
-// src/components/FechamentoCaixa/CaixaCard/CaixaCard.jsx
+﻿// src/components/FechamentoCaixa/CaixaCard/CaixaCard.jsx
 import React, { useMemo, useState } from "react";
 import "./CaixaCard.css";
 
@@ -71,11 +71,9 @@ export function CaixaCard({ caixa, onAddDetalhe }) {
   return (
     <div className="card caixa-card">
       <div className="caixa-card__header">
-        <div>
-          <span className="caixa-card__kicker">Caixa</span>
+        <div> 
           <h3 className="caixa-card__title">{caixa?.descricao || `#${caixa?.id ?? "-"}`}</h3>
-        </div>
-        <span className="caixa-card__badge">ID {caixa?.id ?? "-"}</span>
+        </div> 
       </div>
 
       <div className="caixa-card__rows">
@@ -124,7 +122,6 @@ export function CaixaCard({ caixa, onAddDetalhe }) {
                     <GridGenerico
                       data={(v?.detalhes || []).map((d) => ({
                         ...d,
-                        // mantém valores crus para permitir ordenação correta
                         descricao: d?.descricao ?? "-",
                         valor: Number(d?.valor ?? 0),
                         nomeFuncionario: d?.nomeFuncionario ?? "-",

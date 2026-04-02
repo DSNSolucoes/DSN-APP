@@ -1,0 +1,49 @@
+/* src/components/MesAnoSelector/MesAnoSelector.css */
+
+.mes-ano-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mes-ano-selector__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mes-ano-selector__controls {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.mes-ano-selector__group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mes-ano-selector__sublabel {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.mes-ano-selector__select {
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  min-width: 110px;
+}
+
+.mes-ano-selector__select:focus {
+  border-color: var(--primary);
+}

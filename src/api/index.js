@@ -72,7 +72,7 @@ export const api = {
 
   // 2) login do seu controller atual (retorna dados do usuário / sessão)
   login: (payload) =>
-    request("/Login/login", {
+    request("Login/login", {
       method: "POST",
       body: payload,
       auth: true, // já pode enviar token se quiser
@@ -85,9 +85,81 @@ export const api = {
       auth: false,
     }),
 
-  // Exemplo: qualquer GET protegido
+  // ── Terminal ──────────────────────────────────────────────────────────────
+  ativarContingencia: (numTerminal, lojaId) =>
+    request(`Terminal/AtivarRecursoExtraordinario?numTerminal=${numTerminal}&lojaId=${lojaId}`, {
+      method: "POST", auth: true,
+    }),
+
+  desativarContingencia: (numTerminal, lojaId) =>
+    request(`Terminal/DesativarRecursoExtraordinario?numTerminal=${numTerminal}&lojaId=${lojaId}`, {
+      method: "POST", auth: true,
+    }),
+
+  ativarST: (numTerminal, lojaId, ncm) =>
+    request(`Terminal/AtivarRecursoExtraordinarioicms?numTerminal=${numTerminal}&lojaId=${lojaId}&ncm=${encodeURIComponent(ncm)}`, {
+      method: "POST", auth: true,
+    }),
+
+  desativarST: (numTerminal, lojaId) =>
+    request(`Terminal/DesativarRecursoExtraordinarioicms?numTerminal=${numTerminal}&lojaId=${lojaId}`, {
+      method: "POST", auth: true,
+    }),
+
+  atualizarPercentualST: (lojaId, percentual) =>
+    request(`Terminal/AtualizarPercentualST?lojaId=${lojaId}&percentual=${percentual}`, {
+      method: "POST", auth: true,
+    }),
+
+  margemFiscal: (lojaId) =>
+    request(`Terminal/MargemFiscal?lojaId=${lojaId}`, {
+      method: "POST", auth: true,
+    }),
+
+  // ── NFC-e ─────────────────────────────────────────────────────────────────
+  nfceObterEnviadas: (lojaId, somenteExtraordinaria) =>
+    request(`NFCe/ObterEnviadas?lojaId=${lojaId}&somenteExtraordinaria=${somenteExtraordinaria}`, {
+      method: "GET", auth: true,
+    }),
+
+  nfceObterEnviadasCFOP: (lojaId, inicio, fim) =>
+    request(`NFCe/ObterEnviadasCFOP?lojaId=${lojaId}&inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`, {
+      method: "GET", auth: true,
+    }),
+
+  // ── Caixa ─────────────────────────────────────────────────────────────────
+  caixaListarDias: (empresaId, ano, mes) =>
+    request(`Caixa/ListarDias?empresaId=${empresaId}&anoCompetencia=${ano}&mesCompetencia=${mes}`, {
+      method: "GET", auth: true,
+    }),
+
+  caixaListarTiposValor: () =>
+    request("Caixa/tipovalor", { method: "GET", auth: true }),
+
+  caixaCriarTipoValor: (descricao) =>
+    request("Caixa/tipovalor", { method: "POST", body: { descricao }, auth: true }),
+
+  // ── Faturamento ───────────────────────────────────────────────────────────
+  faturamentoObter: (data, lojaId) => {
+    const params = new URLSearchParams();
+    if (data) params.set("data", data);
+    if (lojaId) params.set("lojaId", String(lojaId));
+    const qs = params.toString();
+    return request(`Faturamento/Obter${qs ? `?${qs}` : ""}`, { method: "GET", auth: true });
+  },
+
+  // ── NCM ───────────────────────────────────────────────────────────────────
+  ncmListar: () =>
+    request("NCM", { method: "GET", auth: true }),
+
+  ncmCriar: (payload) =>
+    request("NCM", { method: "POST", body: payload, auth: true }),
+
+  ncmDeletar: (id) =>
+    request(`NCM/${id}`, { method: "DELETE", auth: true }),
+
+  // Genérico
   get: (path) => request(path, { method: "GET", auth: true }),
 
-  // POST protegido (padrão do projeto)
   post: (path, payload) => request(path, { method: "POST", body: payload, auth: true }),
 };

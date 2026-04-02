@@ -1,0 +1,164 @@
+/* ── Formulário de cadastro ── */
+.ncm-form {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.ncm-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ncm-form__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ncm-form input[type='text'] {
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  min-width: 140px;
+}
+
+.ncm-form input[type='text']:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(33, 84, 255, 0.15);
+}
+
+.ncm-form input.input-error {
+  border-color: #d11;
+}
+
+.ncm-form__error {
+  font-size: 12px;
+  color: #d11;
+  margin-top: 2px;
+}
+
+.ncm-form__toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+  padding-bottom: 2px;
+}
+
+.ncm-btn {
+  padding: 7px 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--primary);
+  color: var(--primary-text);
+  transition: opacity 0.15s;
+}
+
+.ncm-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Tabela ── */
+.ncm-table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  background: var(--card);
+}
+
+.ncm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.ncm-table thead th {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  background: var(--card);
+}
+
+.ncm-table tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.ncm-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ncm-table tbody tr:hover {
+  background: var(--bg);
+}
+
+.ncm-badge-padrao {
+  display: inline-block;
+  background: var(--primary);
+  color: var(--primary-text);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ncm-btn-delete {
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid #d11;
+  background: transparent;
+  color: #d11;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.ncm-btn-delete:hover {
+  background: #d11;
+  color: #fff;
+}
+
+.ncm-btn-delete:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ncm-erro {
+  font-size: 13px;
+  color: #d11;
+  background: #fee2e2;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+}
+
+[data-theme='dark'] .ncm-erro {
+  background: rgba(153, 27, 27, 0.25);
+  color: #fca5a5;
+}

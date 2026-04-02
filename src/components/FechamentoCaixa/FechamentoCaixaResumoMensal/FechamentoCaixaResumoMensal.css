@@ -1,0 +1,93 @@
+.caixa-resumo-mensal-card {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.caixa-resumo-mensal-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.caixa-resumo-mensal-card__overline {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.caixa-resumo-mensal-card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.caixa-resumo-mensal-card__total {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.caixa-resumo-mensal-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.caixa-resumo-mensal-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.04);
+  padding: 12px 14px;
+}
+
+:root[data-theme="dark"] .caixa-resumo-mensal-card__row {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.caixa-resumo-mensal-card__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.caixa-resumo-mensal-card__value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.caixa-resumo-mensal-card__empty {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .caixa-resumo-mensal-card__top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .caixa-resumo-mensal-card__total {
+    font-size: 15px;
+  }
+
+  .caixa-resumo-mensal-card__row {
+    padding: 10px 12px;
+  }
+}

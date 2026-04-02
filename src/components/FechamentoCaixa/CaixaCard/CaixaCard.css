@@ -98,6 +98,87 @@
   line-height: 1;
 }
 
+/* ── Novo tipo de despesa ── */
+
+.caixa-card__novo-tipo {
+  padding-top: 4px;
+  border-top: 1px dashed var(--border);
+}
+
+.caixa-card__novo-tipo-btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--primary);
+  font-size: 13px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.caixa-card__novo-tipo-btn:hover {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border-color: var(--primary);
+}
+
+.caixa-card__novo-tipo-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.caixa-card__novo-tipo-input {
+  flex: 1;
+  min-width: 180px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+}
+
+.caixa-card__novo-tipo-input:focus {
+  border-color: var(--primary);
+}
+
+.caixa-card__novo-tipo-save {
+  padding: 0 14px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: var(--primary);
+  color: var(--primary-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.caixa-card__novo-tipo-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.caixa-card__novo-tipo-cancel {
+  padding: 0 14px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.caixa-card__novo-tipo-erro {
+  width: 100%;
+  font-size: 12px;
+  color: #d11;
+}
+
 .caixa-row__add:hover {
   filter: brightness(0.95);
 }

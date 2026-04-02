@@ -2,18 +2,27 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
 
-const tabs = [
-  { id: 'fiscal', label: 'Fiscal' },
-  { id: 'nfce', label: 'NFC-e' },
-  { id: 'produtos', label: 'Produtos' },
-  { id: 'relatorio', label: 'Relatório' },
-  { id: 'faturamento', label: 'Faturamento' },
-  { id: 'financeiro', label: 'Financeiro' },
-  { id: 'fechamento-caixa', label: 'Fechamento Caixa' }
+// permissao: chave de `permissoes` que libera este item (null = sempre visível)
+const ALL_TABS = [
+  { id: 'fiscal',          label: 'Fiscal',            permissao: 'fiscal' },
+  { id: 'nfce',            label: 'NFC-e',             permissao: 'fiscal' },
+  { id: 'ncm',             label: 'NCM',               permissao: 'fiscal' },
+  { id: 'produtos',        label: 'Produtos',          permissao: 'produto' },
+  { id: 'faturamento',     label: 'Faturamento',       permissao: 'financeiro' },
+  { id: 'fechamento-caixa',label: 'Controle de Caixa',  permissao: 'financeiro' },
+  { id: 'relatorio',       label: 'Relatório',         permissao: 'relatorio' },
 ];
 
-export function Sidebar({ activeTab, setActiveTab, theme, onToggleTheme }) {
+export function Sidebar({ activeTab, setActiveTab, theme, onToggleTheme, permissoes = {} }) {
   const [isOpenMobile, setIsOpenMobile] = useState(false);
+
+  // Se nenhuma permissão for fornecida (ex.: sessão ainda carregando ou sem restrição),
+  // exibe todos os módulos. Se ao menos uma permissão existir na sessão, filtra.
+  const temRestricao = Object.keys(permissoes).some((k) => permissoes[k] === true || permissoes[k] === false);
+
+  const tabs = ALL_TABS.filter((tab) =>
+    !tab.permissao || !temRestricao || permissoes[tab.permissao] === true
+  );
 
   const handleChangeTab = (id) => {
     setActiveTab(id);
@@ -33,8 +42,7 @@ export function Sidebar({ activeTab, setActiveTab, theme, onToggleTheme }) {
       <aside className={'sidebar ' + (isOpenMobile ? 'sidebar--open-mobile' : '')}>
         <div className="sidebar-top">
           <div className="sidebar-header">
-            <h1>Gestão</h1>
-            <span>Sistema Empresarial</span>
+            <h1>Gestão</h1> 
           </div>
 
           {/* botões fixos no topo */}
@@ -73,9 +81,7 @@ export function Sidebar({ activeTab, setActiveTab, theme, onToggleTheme }) {
           ))}
         </nav>
 
-        <div className="sidebar-footer">
-          <span>Configurações</span>
-        </div>
+    
       </aside>
     </>
   );

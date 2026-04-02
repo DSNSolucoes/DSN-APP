@@ -1,111 +1,150 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { obterFuncionarios } from "../../../api/comboService";
 import { api } from "../../../api";
 import { dateBrPipe } from "../../../utils/pipes/datePipe";
 import "./MovimentacaoDetalheModal.css";
 
+function pad2(n) {
+  return String(n).padStart(2, "0");
+}
+
 function toInputDateTimeLocal(iso) {
-  // datetime-local espera: YYYY-MM-DDTHH:mm
   if (!iso) return "";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
 
-  const pad = (n) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}T${pad2(
     d.getHours()
-  )}:${pad(d.getMinutes())}`;
+  )}:${pad2(d.getMinutes())}`;
 }
 
 function fromInputDateTimeLocal(value) {
-  // Converte "YYYY-MM-DDTHH:mm" para ISO (sem timezone garantido, mas suficiente para APIs comuns)
   if (!value) return null;
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return null;
   return d.toISOString();
 }
 
+function toInputDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+function fromInputDate(value) {
+  if (!value) return null;
+  const d = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toISOString();
+}
+
+function onlyDateStringFromDate(dateValue) {
+  const d = typeof dateValue === "string" ? new Date(dateValue) : dateValue;
+  if (!d || Number.isNaN(d.getTime())) return "";
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
 export function MovimentacaoDetalheModal({
   open,
   onClose,
-  empresaId,
   caixa,
   valorCaixa,
   onSaved,
+  dataSelecionada,
 }) {
   const [descricao, setDescricao] = useState("");
   const [valor, setValor] = useState("");
+  const [dataCompetencia, setDataCompetencia] = useState("");
   const [dataRealizacao, setDataRealizacao] = useState("");
-  const [funcionarioId, setFuncionarioId] = useState("");
+  const [nomeFuncionario, setNomeFuncionario] = useState("");
 
-  const [funcionarios, setFuncionarios] = useState([]);
-  const [loadingFuncs, setLoadingFuncs] = useState(false);
+  const [tiposValor, setTiposValor] = useState([]);
+  const [tipoValorIdSelecionado, setTipoValorIdSelecionado] = useState("");
+
   const [saving, setSaving] = useState(false);
   const [erro, setErro] = useState(null);
 
-  const tipoValorLabel = valorCaixa?.tipoValorCaixa?.descricao || "-";
-  const tipoValorId = valorCaixa?.tipoValorCaixa?.id ?? null;
+  const dataFiltroBase = useMemo(() => {
+    if (!dataSelecionada) return onlyDateStringFromDate(new Date());
+    return onlyDateStringFromDate(`${dataSelecionada}T00:00:00`);
+  }, [dataSelecionada]);
 
   const headerInfo = useMemo(() => {
-    if (!caixa || !valorCaixa) return "";
-    const dataTxt = valorCaixa?.dataRealizacao
-      ? dateBrPipe(valorCaixa.dataRealizacao)
-      : "";
-    return `Caixa: ${caixa.descricao || caixa.id} • Tipo: ${tipoValorLabel}${
-      dataTxt ? ` • Última: ${dataTxt}` : ""
-    }`;
-  }, [caixa, valorCaixa, tipoValorLabel]);
+    if (!caixa) return ""; 
+    return `${caixa.descricao || caixa.id}`;
+  }, [caixa, dataSelecionada]);
 
-  // Reset ao abrir
   useEffect(() => {
     if (!open) return;
+
     setErro(null);
     setDescricao("");
     setValor("");
-    setFuncionarioId("");
+    setNomeFuncionario("");
 
-    // default: agora
-    setDataRealizacao(toInputDateTimeLocal(new Date().toISOString()));
+    setTipoValorIdSelecionado(
+      valorCaixa?.tipoValorCaixa?.id ? String(valorCaixa.tipoValorCaixa.id) : ""
+    );
+
+    const agora = new Date();
+    const base = dataFiltroBase
+      ? new Date(`${dataFiltroBase}T00:00:00`)
+      : new Date();
+
+    const realizacaoInicial = new Date(
+      base.getFullYear(),
+      base.getMonth(),
+      base.getDate(),
+      agora.getHours(),
+      agora.getMinutes()
+    );
+
+    setDataCompetencia(toInputDate(base.toISOString()));
+    setDataRealizacao(toInputDateTimeLocal(realizacaoInicial.toISOString()));
+  }, [open, valorCaixa, dataFiltroBase]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    api.caixaListarTiposValor()
+      .then((data) => setTiposValor(data || []))
+      .catch(() => setTiposValor([]));
   }, [open]);
 
-  // Carrega funcionários quando modal abre
   useEffect(() => {
     if (!open) return;
-    if (!empresaId) return;
 
-    setLoadingFuncs(true);
-    obterFuncionarios(empresaId)
-      .then((data) => setFuncionarios(data || []))
-      .catch((e) => {
-        console.error(e);
-        setFuncionarios([]);
-      })
-      .finally(() => setLoadingFuncs(false));
-  }, [open, empresaId]);
-
-  // ESC para fechar
-  useEffect(() => {
-    if (!open) return;
     const onKey = (e) => {
       if (e.key === "Escape") onClose?.();
     };
+
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
   if (!open) return null;
 
+  const tipoLocked = !!valorCaixa?.tipoValorCaixa?.id;
+
   const canSave =
-    !!tipoValorId &&
-    descricao.trim().length > 0 &&
+    !!caixa?.id &&
+    !!tipoValorIdSelecionado &&
     String(valor).trim().length > 0 &&
+    !!fromInputDate(dataCompetencia) &&
     !!fromInputDateTimeLocal(dataRealizacao) &&
     !saving;
 
   async function handleSave() {
     setErro(null);
 
-    if (!tipoValorId) {
-      setErro("Tipo de valor inválido.");
+    if (!caixa?.id) {
+      setErro("Caixa não informado.");
+      return;
+    }
+
+    if (!tipoValorIdSelecionado) {
+      setErro("Selecione o tipo de valor.");
       return;
     }
 
@@ -115,24 +154,50 @@ export function MovimentacaoDetalheModal({
       return;
     }
 
-    const iso = fromInputDateTimeLocal(dataRealizacao);
-    if (!iso) {
+    const competenciaIso = fromInputDate(dataCompetencia);
+    if (!competenciaIso) {
+      setErro("Informe uma data de competência válida.");
+      return;
+    }
+
+    const realizacaoIso = fromInputDateTimeLocal(dataRealizacao);
+    if (!realizacaoIso) {
       setErro("Informe uma data de realização válida.");
       return;
     }
 
+    const dataCompetenciaDia = onlyDateStringFromDate(competenciaIso);
+    const dataRealizacaoDia = onlyDateStringFromDate(realizacaoIso);
+
+    const alterouCompetencia = dataCompetenciaDia !== dataFiltroBase;
+    const alterouRealizacao = dataRealizacaoDia !== dataFiltroBase;
+
+    if (alterouCompetencia || alterouRealizacao) {
+      const confirmar = window.confirm(
+        `A data informada está diferente do filtro principal da tela (${dateBrPipe(
+          `${dataFiltroBase}T00:00:00`
+        )}). Deseja continuar?`
+      );
+
+      if (!confirmar) return;
+    }
+
     const payload = {
-      tipoValor: tipoValorId,
+      caixaId: caixa.id,
+      tipoValorCaixaId: Number(tipoValorIdSelecionado),
       valor: parsedValor,
-      dataRealizacao: iso,
-      descricao: descricao.trim(),
-      funcionarioId: funcionarioId ? Number(funcionarioId) : null,
+      dataCompetencia: competenciaIso,
+      descricao: descricao.trim() || null,
+      dataRealizacao: realizacaoIso,
+      nomeFuncionario: nomeFuncionario.trim() || null,
+      anexoNome: null,
+      anexoContentType: null,
+      anexoArquivo: null,
     };
 
     try {
       setSaving(true);
-      // Endpoint base informado: /Caixa
-      await api.post("Caixa", payload);
+      await api.post("Caixa/movimentacao", payload);
       onSaved?.();
       onClose?.();
     } catch (e) {
@@ -154,7 +219,7 @@ export function MovimentacaoDetalheModal({
     >
       <div className="mvm-modal">
         <div className="mvm-modal__header">
-          <div className="mvm-modal__title">Novo detalhe de movimentação</div>
+          <div className="mvm-modal__title">Nova movimentação</div>
           <button className="mvm-modal__close" onClick={onClose} title="Fechar">
             ✕
           </button>
@@ -166,7 +231,22 @@ export function MovimentacaoDetalheModal({
           <div className="mvm-form__row">
             <div className="mvm-field">
               <label className="mvm-field__label">Tipo de valor</label>
-              <input className="mvm-field__input" value={tipoValorLabel} disabled />
+              <div className="mvm-select__wrapper">
+                <select
+                  className="mvm-select__select"
+                  value={tipoValorIdSelecionado}
+                  onChange={(e) => setTipoValorIdSelecionado(e.target.value)}
+                  disabled={tipoLocked || saving}
+                >
+                  <option value="">Selecione...</option>
+                  {tiposValor.map((t) => (
+                    <option key={t.id} value={String(t.id)}>
+                      {t.descricao}
+                    </option>
+                  ))}
+                </select>
+                <span className="mvm-select__arrow">▾</span>
+              </div>
             </div>
 
             <div className="mvm-field">
@@ -183,6 +263,16 @@ export function MovimentacaoDetalheModal({
 
           <div className="mvm-form__row">
             <div className="mvm-field">
+              <label className="mvm-field__label">Data de competência</label>
+              <input
+                className="mvm-field__input"
+                type="date"
+                value={dataCompetencia}
+                onChange={(e) => setDataCompetencia(e.target.value)}
+              />
+            </div>
+
+            <div className="mvm-field">
               <label className="mvm-field__label">Data de realização</label>
               <input
                 className="mvm-field__input"
@@ -191,37 +281,29 @@ export function MovimentacaoDetalheModal({
                 onChange={(e) => setDataRealizacao(e.target.value)}
               />
             </div>
-
-            <div className="mvm-field">
-              <label className="mvm-field__label">Funcionário (opcional)</label>
-              <div className="mvm-select__wrapper">
-                <select
-                  className="mvm-select__select"
-                  value={funcionarioId}
-                  onChange={(e) => setFuncionarioId(e.target.value)}
-                  disabled={loadingFuncs || !empresaId}
-                >
-                  <option value="">Selecione...</option>
-                  {funcionarios.map((f) => (
-                    <option key={f.id} value={f.id}>
-                      {f.nome}
-                    </option>
-                  ))}
-                </select>
-                <span className="mvm-select__arrow">▾</span>
-              </div>
-            </div>
           </div>
 
-          <div className="mvm-field">
-            <label className="mvm-field__label">Descrição</label>
-            <textarea
-              className="mvm-field__textarea"
-              rows={3}
-              placeholder="Ex.: Pagamento por fora"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-            />
+          <div className="mvm-form__row">
+            <div className="mvm-field">
+              <label className="mvm-field__label">Funcionário (opcional)</label>
+              <input
+                className="mvm-field__input"
+                type="text"
+                placeholder="Digite o nome do funcionário"
+                value={nomeFuncionario}
+                onChange={(e) => setNomeFuncionario(e.target.value)}
+              />
+            </div>
+
+            <div className="mvm-field">
+              <label className="mvm-field__label">Descrição</label>
+              <input
+                className="mvm-field__input"
+                placeholder="Ex.: Pagamento por fora"
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+              />
+            </div>
           </div>
 
           {erro ? <div className="mvm-modal__error">{erro}</div> : null}

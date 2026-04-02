@@ -78,3 +78,15 @@ export async function obterFuncionarios(empresaId) {
   const path = `Funcionario?empresaId=${encodeURIComponent(empresaId)}`;
   return getJson(path);
 }
+
+// Produtos com filtros (múltiplas lojas via array)
+export async function obterProdutos({ lojaIds = [], empresaFornecedor = 0, pesquisa = '', grupoId = 0, fornecedorId = 0, ordenacao = 0 }) {
+  const params = new URLSearchParams();
+  lojaIds.forEach((id) => params.append('lojaId', id));
+  params.set('empresaFornecedor', empresaFornecedor);
+  params.set('pesquisa', pesquisa);
+  params.set('grupoId', grupoId);
+  params.set('fornecedorId', fornecedorId);
+  params.set('ordenacao', ordenacao);
+  return getJson(`Produto/Obter?${params.toString()}`);
+}

@@ -1,106 +1,76 @@
 /* src/pages/FechamentoCaixa/FechamentoCaixaPage.css */
 
-.fechamento-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.fechamento-header-main {
-  flex: 1;
-  min-width: 320px;
-}
-
-.fechamento-filtros-grid {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: minmax(260px, 360px) minmax(220px, 280px);
-  gap: 16px;
-  align-items: end;
-}
-
-.fechamento-campo {
+.caixa-header {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.fechamento-label {
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  color: var(--text-muted, #94a3b8);
-  text-transform: none;
+.caixa-header__info h2 {
+  margin: 0 0 4px;
 }
 
-.fechamento-empresa-wrap {
-  min-height: 40px;
+.caixa-filtros {
   display: flex;
-  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+ 
+
+.caixa-filtros__empresa {
+  flex: 1;
+  min-width: 220px;
+  max-width: 360px;
+}
+ 
+
+.caixa-filtros__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.04em;
 }
 
-.fechamento-empresa-wrap > * {
+.caixa-filtros__date-input {
   width: 100%;
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--border-color, #d1d5db);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--input-bg, #fff);
+  color: var(--text-color, #111827);
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
-.fechamento-datepicker {
-  width: 100%;
+.caixa-filtros__date-input:focus {
+  outline: none;
+  border-color: var(--primary-color, #3b82f6);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
-.fechamento-actions {
+.caixa-hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.caixa-erro {
+  color: #d11;
+  font-size: 13px;
+}
+
+.caixa-acoes {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
 }
 
-/* popup do MUI */
-.fechamento-datepicker-paper.MuiPaper-root {
-  background: var(--panel-bg, #0f172a) !important;
-  color: var(--text-color, #e5e7eb) !important;
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-}
-
-.fechamento-datepicker-popper .MuiPickersLayout-root {
-  background: var(--panel-bg, #0f172a) !important;
-  color: var(--text-color, #e5e7eb) !important;
-}
-
-.fechamento-datepicker-popper .MuiPickersCalendarHeader-root,
-.fechamento-datepicker-popper .MuiDayCalendar-header,
-.fechamento-datepicker-popper .MuiPickersMonth-root,
-.fechamento-datepicker-popper .MuiPickersYear-root {
-  color: var(--text-color, #e5e7eb) !important;
-}
-
-.fechamento-datepicker-popper .MuiPickersMonth-monthButton,
-.fechamento-datepicker-popper .MuiPickersYear-yearButton {
-  color: var(--text-color, #e5e7eb) !important;
-  border-radius: 10px;
-}
-
-.fechamento-datepicker-popper .MuiPickersMonth-monthButton.Mui-selected,
-.fechamento-datepicker-popper .MuiPickersYear-yearButton.Mui-selected {
-  background: var(--accent-color, #3b82f6) !important;
-  color: #fff !important;
-}
-
-.fechamento-datepicker-popper .MuiButton-text {
-  color: var(--accent-color, #60a5fa) !important;
-}
-
-.fechamento-hint {
-  margin-top: 10px;
-  font-size: 13px;
-  color: var(--text-muted, #94a3b8);
-}
-
-.fechamento-erro {
-  margin-top: 6px;
-  font-size: 12px;
-  color: var(--danger-color, #ef4444);
+.caixa-resumo-mensal {
+  margin-top: 24px;
 }
 
 /* impressão */
@@ -123,13 +93,30 @@
 }
 
 @media (max-width: 900px) {
-  .fechamento-filtros-grid {
-    grid-template-columns: 1fr;
+  .caixa-filtros {
+    align-items: stretch;
   }
+ 
 }
 
+ .caixa-filtros__data { 
+    max-width: 40%; 
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+   
+
 @media (max-width: 640px) {
-  .fechamento-actions {
+  .caixa-filtros {
+    flex-direction: column;
+    align-items: stretch;
+  }
+ 
+ 
+
+  .caixa-acoes {
     width: 100%;
     flex-direction: column;
     align-items: stretch;

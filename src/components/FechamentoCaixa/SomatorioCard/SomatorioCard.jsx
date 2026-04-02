@@ -15,9 +15,8 @@ export function SomatorioCard({ items = [] }) {
   return (
     <div className="card somatorio-card">
       <div className="somatorio-card__header">
-        <div>
-          <span className="somatorio-card__kicker">Resumo</span>
-          <h3 className="somatorio-card__title">Somatório</h3>
+        <div> 
+          <h3 className="somatorio-card__title">Total </h3>
         </div>
         <div className="somatorio-card__total" title={`R$ ${formatMoneyBR(totalGeral)}`}>
           <span className="somatorio-card__currency">R$</span>

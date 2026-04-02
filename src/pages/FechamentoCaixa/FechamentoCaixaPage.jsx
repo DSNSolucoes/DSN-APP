@@ -1,13 +1,5 @@
-// src/pages/FechamentoCaixa/FechamentoCaixaPage.jsx
-import React, { useEffect, useMemo, useState } from "react";
-import dayjs from "dayjs";
-import "dayjs/locale/pt-br";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./FechamentoCaixaPage.css";
-
-import { Box, Typography } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { FechamentoCaixaGrid } from "../../components/FechamentoCaixa/FechamentoCaixaGrid/FechamentoCaixaGrid";
 import { mapFechamentoCaixaResponse } from "../../models/FechamentoCaixa/FechamentoCaixaModels";
@@ -15,70 +7,104 @@ import { api } from "../../api";
 import { EmpresaSelecao } from "../../components/EmpresaSelecao/EmpresaSelecao";
 import { MovimentacaoDetalheModal } from "../../components/FechamentoCaixa/MovimentacaoDetalheModal/MovimentacaoDetalheModal";
 import { FechamentoCaixaPrint } from "../../components/FechamentoCaixa/FechamentoCaixaPrint/FechamentoCaixaPrint";
+import { FechamentoCaixaResumoMensal } from "../../components/FechamentoCaixa/FechamentoCaixaResumoMensal/FechamentoCaixaResumoMensal";
 
-dayjs.locale("pt-br");
+function formatarData(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function obterAnoMes(dataIso) {
+  if (!dataIso) return { ano: 0, mes: 0 };
+  const [ano, mes] = dataIso.split("-");
+  return {
+    ano: Number(ano),
+    mes: Number(mes),
+  };
+}
 
 export function FechamentoCaixaPage({ data }) {
   const [remoteData, setRemoteData] = useState(null);
+  const [resumoMensal, setResumoMensal] = useState([]);
+  const [loadingResumoMensal, setLoadingResumoMensal] = useState(false);
   const [error, setError] = useState("");
   const [empresaSelecionada, setEmpresaSelecionada] = useState(null);
-  const [competencia, setCompetencia] = useState(null);
+  const [dataSelecionada, setDataSelecionada] = useState(formatarData(new Date()));
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalCtx, setModalCtx] = useState(null);
+
   const [printMode, setPrintMode] = useState(null);
 
   const empresaId = empresaSelecionada?.id ?? null;
-  const anoCompetencia = competencia ? competencia.year() : null;
-  const mesCompetencia = competencia ? competencia.month() + 1 : null;
 
-  async function ObterCaixas({ empresaId, anoCompetencia, mesCompetencia }) {
-    setError("");
-
-    const params = new URLSearchParams({
-      empresaId: String(empresaId),
-      anoCompetencia: String(anoCompetencia),
-      mesCompetencia: String(mesCompetencia),
-    });
-
-    const res = await api.get(`Caixa?${params.toString()}`);
-    return res ?? [];
-  }
-
-  useEffect(() => {
-    let mounted = true;
-
-    async function load() {
-      if (data !== undefined) return;
-
-      if (!empresaId || !competencia) {
-        setRemoteData([]);
-        setError("");
-        return;
-      }
-
-      try {
-        const res = await ObterCaixas({
-          empresaId,
-          anoCompetencia,
-          mesCompetencia,
-        });
-
-        if (!mounted) return;
-        setRemoteData(res ?? []);
-      } catch (e) {
-        if (!mounted) return;
-        setError(e?.message || "Erro ao carregar /Caixa");
-        setRemoteData([]);
-      }
+  const carregarCaixas = useCallback(async () => {
+    if (!empresaId) {
+      setRemoteData([]);
+      return;
     }
 
-    load();
+    setError("");
+    setRemoteData([]);
 
-    return () => {
-      mounted = false;
-    };
-  }, [data, empresaId, competencia, anoCompetencia, mesCompetencia]);
+    const params = new URLSearchParams({
+      lojaId: String(empresaId),
+      data: dataSelecionada,
+    });
+
+    try {
+      const res = await api.get(`Caixa?${params.toString()}`);
+      setRemoteData(res ?? []);
+    } catch (e) {
+      setError(e?.message || "Erro ao carregar /Caixa");
+      setRemoteData([]);
+    }
+  }, [empresaId, dataSelecionada]);
+
+  const carregarResumoMensal = useCallback(async () => {
+    if (!empresaId) {
+      setResumoMensal([]);
+      return;
+    }
+
+    const { ano, mes } = obterAnoMes(dataSelecionada);
+
+    if (!ano || !mes) {
+      setResumoMensal([]);
+      return;
+    }
+
+    setLoadingResumoMensal(true);
+    setResumoMensal([]);
+
+    const params = new URLSearchParams({
+      lojaId: String(empresaId),
+      ano: String(ano),
+      mes: String(mes),
+    });
+
+    try {
+      const res = await api.get(`Caixa/resumo-mensal?${params.toString()}`);
+      setResumoMensal(res ?? []);
+    } catch (e) {
+      console.error(e);
+      setResumoMensal([]);
+    } finally {
+      setLoadingResumoMensal(false);
+    }
+  }, [empresaId, dataSelecionada]);
+
+  useEffect(() => {
+    if (data !== undefined) return;
+    carregarCaixas();
+  }, [data, carregarCaixas]);
+
+  useEffect(() => {
+    if (data !== undefined) return;
+    carregarResumoMensal();
+  }, [data, carregarResumoMensal]);
 
   const caixas = useMemo(() => {
     const src = data !== undefined ? data : remoteData;
@@ -86,30 +112,26 @@ export function FechamentoCaixaPage({ data }) {
     return mapFechamentoCaixaResponse(src);
   }, [data, remoteData]);
 
+  const caixasFiltradas = useMemo(() => caixas, [caixas]);
+
   function handleAddDetalhe({ caixaId, valorId }) {
     const caixa = caixas.find((c) => c.id === caixaId);
     const valorCaixa = caixa?.valores?.find((v) => v.id === valorId);
 
     if (!caixa || !valorCaixa) return;
 
-    setModalCtx({ caixa, valorCaixa });
+    setModalCtx({
+      caixa,
+      valorCaixa,
+      dataSelecionada,
+    });
+
     setModalOpen(true);
   }
 
   async function handleSaved() {
-    if (data !== undefined) return;
-    if (!empresaId || !competencia) return;
-
-    try {
-      const res = await ObterCaixas({
-        empresaId,
-        anoCompetencia,
-        mesCompetencia,
-      });
-      setRemoteData(res ?? []);
-    } catch (e) {
-      setError(e?.message || "Erro ao recarregar /Caixa");
-    }
+    await carregarCaixas();
+    await carregarResumoMensal();
   }
 
   function handlePrint(mode) {
@@ -120,140 +142,96 @@ export function FechamentoCaixaPage({ data }) {
     }, 50);
   }
 
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
-      <div className="page">
-        <header className="page-header fechamento-header">
-          <div className="fechamento-header-main">
-            <div>
-              <h2>Fechamento de Caixa</h2>
-              <p className="muted">
-                Selecione a empresa e a competência para visualizar o fechamento.
-              </p>
-            </div>
+   return (
+  <div className="page">
+    <header className="page-header caixa-header">
+      <div className="caixa-header__info">
+        <h2>Controle de Caixa</h2>
+        <p className="muted">
+          Selecione a empresa e a data para visualizar o caixa.
+        </p>
+      </div>
 
-            <div className="fechamento-filtros-grid">
-              <div className="fechamento-campo">
-                <Typography className="fechamento-label">Empresa</Typography>
-                <div className="fechamento-empresa-wrap">
-                  <EmpresaSelecao
-                    empresaSelecionadaId={empresaId}
-                    onChangeEmpresa={setEmpresaSelecionada}
-                  />
-                </div>
-              </div>
+     <div className="caixa-filtros">
+  <div className="caixa-filtros__empresa"> 
+    <EmpresaSelecao
+      empresaSelecionadaId={empresaId}
+      onChangeEmpresa={setEmpresaSelecionada}
+    />
+  </div>
 
-              <div className="fechamento-campo">
-                <DatePicker
-                  label="Competência"
-                  views={["year", "month"]}
-                  openTo="month"
-                  value={competencia}
-                  onChange={(newValue) => setCompetencia(newValue)}
-                  format="MM/YYYY"
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      size: "small",
-                      className: "fechamento-datepicker",
-                    },
-                    actionBar: {
-                      actions: ["clear", "accept"],
-                    },
-                    desktopPaper: {
-                      className: "fechamento-datepicker-paper",
-                    },
-                    mobilePaper: {
-                      className: "fechamento-datepicker-paper",
-                    },
-                    popper: {
-                      className: "fechamento-datepicker-popper",
-                    },
-                  }}
-                  sx={{
-                    width: "100%",
-                    "& .MuiInputBase-root": {
-                      height: 40,
-                      borderRadius: "10px",
-                    },
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "var(--border-color, rgba(255,255,255,0.16))",
-                    },
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "var(--accent-color, #3b82f6)",
-                    },
-                    "& .MuiInputLabel-root": {
-                      color: "var(--text-muted, #94a3b8)",
-                    },
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "var(--accent-color, #3b82f6)",
-                    },
-                    "& .MuiOutlinedInput-input": {
-                      color: "var(--text-color, #e5e7eb)",
-                    },
-                    "& .MuiSvgIcon-root": {
-                      color: "var(--text-muted, #94a3b8)",
-                    },
-                  }}
-                />
-              </div>
-            </div>
+  {empresaId && (
+    <div className="caixa-filtros__data">
+      <span className="caixa-filtros__label">Data</span>
+      <input
+        type="date"
+        className="caixa-filtros__date-input"
+        value={dataSelecionada}
+        onChange={(e) => setDataSelecionada(e.target.value)}
+      />
+    </div>
+  )}
+</div>
 
-            {!data && !empresaId ? (
-              <p className="fechamento-hint">
-                Selecione uma empresa para habilitar a busca.
-              </p>
-            ) : null}
+      {!data && !empresaId && (
+        <p className="caixa-hint">Selecione uma empresa para habilitar a busca.</p>
+      )}
+      {error && <p className="caixa-erro">{error}</p>}
 
-            {!data && empresaId && !competencia ? (
-              <p className="fechamento-hint">
-                Agora selecione a competência para carregar os caixas.
-              </p>
-            ) : null}
+      <div className="no-print caixa-acoes">
+        <button
+          type="button"
+          className="btn"
+          disabled={!caixasFiltradas.length}
+          onClick={() => handlePrint("simple")}
+        >
+          Imprimir planilha
+        </button>
+        <button
+          type="button"
+          className="btn"
+          disabled={!caixasFiltradas.length}
+          onClick={() => handlePrint("detail")}
+        >
+          Imprimir com detalhes
+        </button>
+      </div>
+    </header>
 
-            {error ? <p className="fechamento-erro">{error}</p> : null}
-          </div>
+    <FechamentoCaixaGrid
+      caixas={caixasFiltradas}
+      onAddDetalhe={handleAddDetalhe}
+    />
 
-          <div className="no-print fechamento-actions">
-            <button
-              type="button"
-              className="btn"
-              disabled={!caixas.length}
-              onClick={() => handlePrint("simple")}
-            >
-              Imprimir planilha
-            </button>
+    <section className="caixa-resumo-mensal">
+      {loadingResumoMensal ? (
+        <p>Carregando resumo mensal...</p>
+      ) : !resumoMensal.length ? (
+        <FechamentoCaixaResumoMensal itens={[]} />
+      ) : (
+        <FechamentoCaixaResumoMensal itens={resumoMensal} />
+      )}
+    </section>
 
-            <button
-              type="button"
-              className="btn"
-              disabled={!caixas.length}
-              onClick={() => handlePrint("detail")}
-            >
-              Imprimir com detalhes
-            </button>
-          </div>
-        </header>
-
-        <FechamentoCaixaGrid caixas={caixas} onAddDetalhe={handleAddDetalhe} />
-
-        <div className="print-only">
-          <FechamentoCaixaPrint
-            caixas={caixas}
-            mode={printMode || "simple"}
-            empresaNome={empresaSelecionada?.descricao || empresaSelecionada?.nome || ""}
-          />
-        </div>
-
-        <MovimentacaoDetalheModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          empresaId={empresaId}
-          caixa={modalCtx?.caixa ?? null}
-          valorCaixa={modalCtx?.valorCaixa ?? null}
-          onSaved={handleSaved}
+    {printMode && (
+      <div className="print-only">
+        <FechamentoCaixaPrint
+          caixas={caixasFiltradas}
+          mode={printMode}
+          empresaNome={empresaSelecionada?.descricao || empresaSelecionada?.nome || ""}
         />
       </div>
-    </LocalizationProvider>
-  );
+    )}
+
+    <MovimentacaoDetalheModal
+      open={modalOpen}
+      onClose={() => setModalOpen(false)}
+      empresaId={empresaId}
+      caixa={modalCtx?.caixa ?? null}
+      valorCaixa={modalCtx?.valorCaixa ?? null}
+      dataSelecionada={modalCtx?.dataSelecionada ?? dataSelecionada}
+      onSaved={handleSaved}
+    />
+  </div>
+);
 }

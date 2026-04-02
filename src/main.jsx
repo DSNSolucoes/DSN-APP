@@ -5,14 +5,17 @@ import App from "./App.jsx";
 import "./App.css";
 import { AuthProvider } from "./auth/AuthContext";
 import { EmpresaProvider } from "./context/EmpresaContext";
+import { NCMProvider } from "./context/NCMContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <EmpresaProvider>
-        <App />
-              </EmpresaProvider>
+          <NCMProvider>
+            <App />
+          </NCMProvider>
+        </EmpresaProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
